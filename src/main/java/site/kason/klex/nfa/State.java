@@ -11,38 +11,27 @@ import java.util.Set;
  */
 public class State {
 
-  private Map<Integer, Set<State>> nextStates = new HashMap();
-
-  private Map<Matcher, Set<State>> nextStatesByMatcher = new HashMap();
+  private Map<Matcher, Set<State>> nextStates = new HashMap();
 
   private Set<State> closureStates = new HashSet();
 
   public void pushNextState(int input, State nextState) {
-    Set<State> list = nextStates.get(input);
-    if (list == null) {
-      list = new HashSet();
-      nextStates.put(input, list);
-    }
-    list.add(nextState);
+    pushNextState(new CharMatcher(input), nextState);
   }
 
   public void pushNextState(Matcher matcher, State nextState) {
-    Set<State> list = this.nextStatesByMatcher.get(matcher);
+    Set<State> list = this.nextStates.get(matcher);
     if (list == null) {
       list = new HashSet();
-      nextStatesByMatcher.put(matcher, list);
+      nextStates.put(matcher, list);
     }
     list.add(nextState);
   }
 
   public State[] getNextStates(int input) {
     Set<State> result = new HashSet();
-    Set<State> list = nextStates.get(input);
-    if (list != null) {
-      result.addAll(list);
-    }
-    if (!this.nextStatesByMatcher.isEmpty()) {
-      for (Map.Entry<Matcher, Set<State>> e : this.nextStatesByMatcher.entrySet()) {
+    if (!this.nextStates.isEmpty()) {
+      for (Map.Entry<Matcher, Set<State>> e : this.nextStates.entrySet()) {
         if (e.getKey().isMatched(input)) {
           result.addAll(e.getValue());
         }
@@ -57,6 +46,10 @@ public class State {
 
   public void pushLambdaClosureState(State state) {
     this.closureStates.add(state);
+  }
+
+  public Map<Matcher, Set<State>> getNextStates() {
+    return new HashMap(nextStates);
   }
 
 }

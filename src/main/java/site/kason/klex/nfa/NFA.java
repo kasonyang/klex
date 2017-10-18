@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 import site.kason.klex.CharStream;
 
@@ -25,24 +24,10 @@ public class NFA {
     this.acceptedStates = acceptedStates;
   }
 
-  private static Set<State> getLambdaClosureStates(Set<State> states) {
-    Queue<State> todos = new LinkedList();
-    todos.addAll(states);
-    Set<State> results = new HashSet();
-    while (!todos.isEmpty()) {
-      State s = todos.poll();
-      if (results.add(s)) {
-        State[] lambdaStates = s.getLambdaClosureStates();
-        todos.addAll(Arrays.asList(lambdaStates));
-      }
-    }
-    return results;
-  }
-
   public MatchResult match(CharStream inputStream) {
     Set<State> currentStates = new HashSet();
     currentStates.add(startState);
-    currentStates = getLambdaClosureStates(currentStates);
+    currentStates = StateUtil.getLambdaClosureStates(currentStates);
     State[] matchedState = null;//this.findAcceptedState(currentStates);
     int inputOffset = 1;
     int matchedLen = 0;
@@ -53,7 +38,7 @@ public class NFA {
         State[] nexts = s.getNextStates(input);
         nextStates.addAll(Arrays.asList(nexts));
       }
-      nextStates = getLambdaClosureStates(nextStates);
+      nextStates = StateUtil.getLambdaClosureStates(nextStates);
       State[] found = this.findAcceptedState(nextStates);
       if (found != null && found.length > 0) {
         matchedState = found;
