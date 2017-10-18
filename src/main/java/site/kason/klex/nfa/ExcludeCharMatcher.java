@@ -4,7 +4,7 @@ package site.kason.klex.nfa;
  *
  * @author Kason Yang
  */
-public class ExcludeCharMatcher implements CharMatcher {
+public class ExcludeCharMatcher implements Matcher {
 
   private final int[] excludeChars;
 

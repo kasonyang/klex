@@ -13,7 +13,7 @@ public class State {
 
   private Map<Integer, Set<State>> nextStates = new HashMap();
 
-  private Map<CharMatcher, Set<State>> nextStatesByMatcher = new HashMap();
+  private Map<Matcher, Set<State>> nextStatesByMatcher = new HashMap();
 
   private Set<State> closureStates = new HashSet();
 
@@ -26,7 +26,7 @@ public class State {
     list.add(nextState);
   }
 
-  public void pushNextState(CharMatcher matcher, State nextState) {
+  public void pushNextState(Matcher matcher, State nextState) {
     Set<State> list = this.nextStatesByMatcher.get(matcher);
     if (list == null) {
       list = new HashSet();
@@ -42,7 +42,7 @@ public class State {
       result.addAll(list);
     }
     if (!this.nextStatesByMatcher.isEmpty()) {
-      for (Map.Entry<CharMatcher, Set<State>> e : this.nextStatesByMatcher.entrySet()) {
+      for (Map.Entry<Matcher, Set<State>> e : this.nextStatesByMatcher.entrySet()) {
         if (e.getKey().isMatched(input)) {
           result.addAll(e.getValue());
         }

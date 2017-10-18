@@ -4,7 +4,7 @@ package site.kason.klex.nfa;
  *
  * @author Kason Yang
  */
-public class RangeCharMatcher implements CharMatcher {
+public class RangeCharMatcher implements Matcher {
 
   private int firstAcceptedChar;
 
