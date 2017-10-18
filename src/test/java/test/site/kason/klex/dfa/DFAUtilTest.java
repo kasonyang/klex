@@ -20,7 +20,7 @@ public class DFAUtilTest {
 
   @Test
   public void test() {
-    NFA nfa = NFAUtil.oneOf("if", "for", "while");
+    NFA nfa = NFAUtil.oneOfString("if", "for", "while");
     DFA dfa = DFAUtil.buildFromNFA(nfa);
     assertMatch(dfa, "if");
     assertMatch(dfa, "for");

@@ -23,7 +23,7 @@ public class NFAUtilTest {
   @Test
   public void testNFA() {
     CharStream is = new StringCharStream("hello");
-    NFA nfa = NFAUtil.oneOf("hello");
+    NFA nfa = NFAUtil.oneOfString("hello");
     NFAState[] acceptedStates = nfa.getAcceptedStates();
     assertEquals(acceptedStates.length, 1);
     NFAMatchResult matchedState = nfa.match(is);
@@ -47,8 +47,8 @@ public class NFAUtilTest {
     StringCharStream is2 = new StringCharStream("hi");
     StringCharStream isConcat = new StringCharStream("hellohi");
     StringCharStream is3 = new StringCharStream("not match");
-    NFA nfa = NFAUtil.oneOf("hello");
-    NFA nfa2 = NFAUtil.oneOf("hi");
+    NFA nfa = NFAUtil.oneOfString("hello");
+    NFA nfa2 = NFAUtil.oneOfString("hi");
     nfa.or(nfa2);
     NFAMatchResult matched1 = nfa.match(is1);
     NFAMatchResult matched2 = nfa.match(is2);
@@ -93,7 +93,7 @@ public class NFAUtilTest {
   
     @Test
   public void testOneOfString(){
-    NFA nfa = NFAUtil.oneOf("if","for");
+    NFA nfa = NFAUtil.oneOfString("if","for");
     assertNotNull(nfa.match(new StringCharStream("if")));
     assertNotNull(nfa.match(new StringCharStream("for")));
     assertNull(nfa.match(new StringCharStream("while")));

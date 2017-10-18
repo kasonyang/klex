@@ -18,16 +18,16 @@ public class NFAUtil {
     return new NFA(startState, Arrays.asList(acceptedState));
   }
 
-  public static NFA oneOf(String... str) {
+  public static NFA oneOfString(String... str) {
     NFA nfa = null;
     for (int i = 0; i < str.length; i++) {
-      NFA theNfa = of(str[i]);
+      NFA theNfa = ofString(str[i]);
       nfa = (nfa == null) ? theNfa : nfa.or(theNfa);
     }
     return nfa;
   }
 
-  public static NFA of(String str) {
+  public static NFA ofString(String str) {
     NFAState startState = new NFAState();
     NFAState currentState = startState;
     int strLen = str.length();
@@ -47,7 +47,7 @@ public class NFAUtil {
     startState.pushNextState(new ExcludeCharMatcher(excludes), acceptedState);
     return new NFA(startState, Arrays.asList(acceptedState));
   }
-
+  
   public static NFA oneOf(int... chars) {
     NFAState startState = new NFAState();
     NFAState acceptedState = new NFAState();

@@ -46,10 +46,10 @@ public class LexerTest {
   }
 
   final static TokenRule[] TOKENS = new TokenRule[]{
-    TI(0, NFAUtil.oneOf(" ")),
-    TI(1, NFAUtil.oneOf("if")),
-    TI(2, NFAUtil.oneOf("for")),
-    TI(3, NFAUtil.oneOf("do")),
+    TI(0, NFAUtil.oneOfString(" ")),
+    TI(1, NFAUtil.oneOfString("if")),
+    TI(2, NFAUtil.oneOfString("for")),
+    TI(3, NFAUtil.oneOfString("do")),
     TI(4, NFAUtil.range('a', 'z')
     .concat(NFAUtil.range('a', 'z').closure())),};
 
