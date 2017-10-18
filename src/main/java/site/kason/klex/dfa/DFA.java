@@ -19,8 +19,15 @@ public class DFA {
     this.acceptedStates = acceptedStates;
   }
   
+  @Deprecated
   @Nullable
   public DFAMatchResult match(CharStream charStream){
+    return match(charStream,true);
+  }
+  
+  @Deprecated
+  @Nullable
+  public DFAMatchResult match(CharStream charStream,boolean consume){
     DFAState state = this.startState;
     DFAState matchedState = null;
     int matchedLen = 0;
@@ -35,11 +42,25 @@ public class DFA {
       pos++;
     }
     if(matchedState!=null){
-      int[] matchedChars = charStream.consume(matchedLen);
+      int[] matchedChars = new int[matchedLen];
+      for(int i=0;i<matchedChars.length;i++){
+        matchedChars[i] = charStream.lookAhead(i+1);
+      }
+      if(consume){
+        charStream.skip(matchedLen);
+      }
       return new DFAMatchResult(matchedState, matchedLen, matchedChars);
     }else{
       return null;
     }
+  }
+
+  public DFAState getStartState() {
+    return startState;
+  }
+
+  public DFAState[] getAcceptedStates() {
+    return acceptedStates.toArray(new DFAState[acceptedStates.size()]);
   }
 
 }

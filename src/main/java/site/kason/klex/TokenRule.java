@@ -8,6 +8,10 @@ import site.kason.klex.nfa.NFA;
  */
 public interface TokenRule {
 
+  /**
+   * smaller value has higher priority
+   * @return 
+   */
   public int getPriority();
 
   public NFA getNFA();
