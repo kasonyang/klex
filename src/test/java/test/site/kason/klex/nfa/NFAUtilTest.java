@@ -1,4 +1,4 @@
-package test.site.kason.klex;
+package test.site.kason.klex.nfa;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -8,8 +8,8 @@ import site.kason.klex.CharStream;
 import site.kason.klex.StringCharStream;
 import site.kason.klex.nfa.NFA;
 import site.kason.klex.nfa.NFAUtil;
-import site.kason.klex.nfa.State;
-import site.kason.klex.nfa.MatchResult;
+import site.kason.klex.nfa.NFAState;
+import site.kason.klex.nfa.NFAMatchResult;
 
 /**
  *
@@ -24,9 +24,9 @@ public class NFAUtilTest {
   public void testNFA() {
     CharStream is = new StringCharStream("hello");
     NFA nfa = NFAUtil.oneOf("hello");
-    State[] acceptedStates = nfa.getAcceptedStates();
+    NFAState[] acceptedStates = nfa.getAcceptedStates();
     assertEquals(acceptedStates.length, 1);
-    MatchResult matchedState = nfa.match(is);
+    NFAMatchResult matchedState = nfa.match(is);
     assertNotNull(matchedState);
     //assertTrue(Arrays.asList(acceptedStates).contains(matchedState.getMatchedState()));
   }
@@ -50,9 +50,9 @@ public class NFAUtilTest {
     NFA nfa = NFAUtil.oneOf("hello");
     NFA nfa2 = NFAUtil.oneOf("hi");
     nfa.or(nfa2);
-    MatchResult matched1 = nfa.match(is1);
-    MatchResult matched2 = nfa.match(is2);
-    MatchResult matched3 = nfa.match(is3);
+    NFAMatchResult matched1 = nfa.match(is1);
+    NFAMatchResult matched2 = nfa.match(is2);
+    NFAMatchResult matched3 = nfa.match(is3);
     assertNotNull(matched1);
     assertNotNull(matched2);
     assertNull(matched3);

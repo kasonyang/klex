@@ -1,4 +1,4 @@
-package site.kason.klex.nfa;
+package site.kason.klex.match;
 
 /**
  *

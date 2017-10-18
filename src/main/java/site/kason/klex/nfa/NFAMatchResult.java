@@ -1,24 +1,26 @@
 package site.kason.klex.nfa;
 
+import site.kason.klex.nfa.NFAState;
+
 /**
  *
  * @author Kason Yang
  */
-public class MatchResult {
+public class NFAMatchResult {
 
-  private State[] matchedState;
+  private NFAState[] matchedState;
 
   private int matchedLength;
 
   private int[] matchedChars;
 
-  public MatchResult(State[] matchedState, int matchedLength, int[] matchedChars) {
+  public NFAMatchResult(NFAState[] matchedState, int matchedLength, int[] matchedChars) {
     this.matchedState = matchedState;
     this.matchedLength = matchedLength;
     this.matchedChars = matchedChars;
   }
 
-  public State[] getMatchedState() {
+  public NFAState[] getMatchedState() {
     return matchedState;
   }
 

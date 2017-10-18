@@ -15,31 +15,31 @@ import site.kason.klex.CharStream;
  */
 public class NFA {
 
-  private State startState;
+  private NFAState startState;
 
-  private List<State> acceptedStates;
+  private List<NFAState> acceptedStates;
 
-  public NFA(State startState, List<State> acceptedStates) {
+  public NFA(NFAState startState, List<NFAState> acceptedStates) {
     this.startState = startState;
     this.acceptedStates = acceptedStates;
   }
 
-  public MatchResult match(CharStream inputStream) {
-    Set<State> currentStates = new HashSet();
+  public NFAMatchResult match(CharStream inputStream) {
+    Set<NFAState> currentStates = new HashSet();
     currentStates.add(startState);
-    currentStates = StateUtil.getLambdaClosureStates(currentStates);
-    State[] matchedState = null;//this.findAcceptedState(currentStates);
+    currentStates = NFAStateUtil.getLambdaClosureStates(currentStates);
+    NFAState[] matchedState = null;//this.findAcceptedState(currentStates);
     int inputOffset = 1;
     int matchedLen = 0;
     while (!currentStates.isEmpty() && inputStream.lookAhead(inputOffset) != CharStream.EOF) {
-      Set<State> nextStates = new HashSet();
+      Set<NFAState> nextStates = new HashSet();
       int input = inputStream.lookAhead(inputOffset++);
-      for (State s : currentStates) {
-        State[] nexts = s.getNextStates(input);
+      for (NFAState s : currentStates) {
+        NFAState[] nexts = s.getNextStates(input);
         nextStates.addAll(Arrays.asList(nexts));
       }
-      nextStates = StateUtil.getLambdaClosureStates(nextStates);
-      State[] found = this.findAcceptedState(nextStates);
+      nextStates = NFAStateUtil.getLambdaClosureStates(nextStates);
+      NFAState[] found = this.findAcceptedState(nextStates);
       if (found != null && found.length > 0) {
         matchedState = found;
         matchedLen = inputOffset - 1;
@@ -47,35 +47,35 @@ public class NFA {
       currentStates = nextStates;
     }
     int[] matchedChars = inputStream.consume(matchedLen);
-    return matchedState != null ? new MatchResult(matchedState, matchedLen, matchedChars) : null;
+    return matchedState != null ? new NFAMatchResult(matchedState, matchedLen, matchedChars) : null;
   }
 
-  private State[] findAcceptedState(Set<State> states) {
-    List<State> accepteds = new LinkedList();
-    for (State s : states) {
+  private NFAState[] findAcceptedState(Set<NFAState> states) {
+    List<NFAState> accepteds = new LinkedList();
+    for (NFAState s : states) {
       if (this.acceptedStates.contains(s)) {
         accepteds.add(s);
       }
     }
-    return accepteds.toArray(new State[accepteds.size()]);
+    return accepteds.toArray(new NFAState[accepteds.size()]);
   }
 
-  public State[] getAcceptedStates() {
-    State[] res = (State[]) Array.newInstance(State.class, acceptedStates.size());
+  public NFAState[] getAcceptedStates() {
+    NFAState[] res = (NFAState[]) Array.newInstance(NFAState.class, acceptedStates.size());
     return acceptedStates.toArray(res);
   }
 
-  public State getStartState() {
+  public NFAState getStartState() {
     return startState;
   }
 
   public NFA or(NFA nfa2) {
-    State newStartState = new State();
+    NFAState newStartState = new NFAState();
     newStartState.pushLambdaClosureState(this.getStartState());
     newStartState.pushLambdaClosureState(nfa2.getStartState());
-    State[] acList1 = this.getAcceptedStates();
-    State[] acList2 = nfa2.getAcceptedStates();
-    List<State> newAcceptedStates = new ArrayList(acList1.length + acList2.length);
+    NFAState[] acList1 = this.getAcceptedStates();
+    NFAState[] acList2 = nfa2.getAcceptedStates();
+    List<NFAState> newAcceptedStates = new ArrayList(acList1.length + acList2.length);
     newAcceptedStates.addAll(Arrays.asList(acList1));
     newAcceptedStates.addAll(Arrays.asList(acList2));
     this.startState = newStartState;
@@ -84,9 +84,9 @@ public class NFA {
   }
 
   public NFA concat(NFA nfa2) {
-    State newStartState = this.getStartState();
-    State[] accpetedState = this.getAcceptedStates();
-    for (State ac : accpetedState) {
+    NFAState newStartState = this.getStartState();
+    NFAState[] accpetedState = this.getAcceptedStates();
+    for (NFAState ac : accpetedState) {
       ac.pushLambdaClosureState(nfa2.getStartState());
     }
     this.startState = newStartState;
@@ -95,8 +95,8 @@ public class NFA {
   }
 
   public NFA closure() {
-    State[] acList = this.getAcceptedStates();
-    for (State s : acList) {
+    NFAState[] acList = this.getAcceptedStates();
+    for (NFAState s : acList) {
       s.pushLambdaClosureState(startState);
       startState.pushLambdaClosureState(s);
     }

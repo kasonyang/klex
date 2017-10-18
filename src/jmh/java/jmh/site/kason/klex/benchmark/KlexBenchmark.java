@@ -16,7 +16,7 @@ import site.kason.klex.StringCharStream;
 import site.kason.klex.dfa.DFA;
 import site.kason.klex.dfa.DFAMatchResult;
 import site.kason.klex.dfa.DFAUtil;
-import site.kason.klex.nfa.MatchResult;
+import site.kason.klex.nfa.NFAMatchResult;
 import site.kason.klex.nfa.NFA;
 import site.kason.klex.nfa.NFAUtil;
 
@@ -46,7 +46,7 @@ public class KlexBenchmark {
     dfa = DFAUtil.buildFromNFA(nfa);
     int contentLen = content.length();
     DFAMatchResult dfaResult = this.benchmarkDFA();
-    MatchResult nfaResult = this.benchmarkNFA();
+    NFAMatchResult nfaResult = this.benchmarkNFA();
     if(dfaResult.getMatchedLength()!=contentLen || nfaResult.getMatchedLength()!=contentLen){
       throw new RuntimeException("unexpected result");
     }
@@ -58,7 +58,7 @@ public class KlexBenchmark {
   }
 
   @Benchmark
-  public MatchResult benchmarkNFA() {
+  public NFAMatchResult benchmarkNFA() {
     return nfa.match(new StringCharStream(content));
   }
 

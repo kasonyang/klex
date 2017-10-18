@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import site.kason.klex.nfa.MatchResult;
+import site.kason.klex.nfa.NFAMatchResult;
 import site.kason.klex.nfa.NFA;
-import site.kason.klex.nfa.State;
+import site.kason.klex.nfa.NFAState;
 
 /**
  *
@@ -15,7 +15,7 @@ import site.kason.klex.nfa.State;
 public class Klexer<TOKEN, TOKEN_RULE extends TokenRule> {
 
   private NFA nfa;
-  private Map<State, TOKEN_RULE> stateToTokenRule = new HashMap();
+  private Map<NFAState, TOKEN_RULE> stateToTokenRule = new HashMap();
   private CharStream charStream;
   //private int offset = 0;
 
@@ -32,7 +32,7 @@ public class Klexer<TOKEN, TOKEN_RULE extends TokenRule> {
   private void addTokenRule(TOKEN_RULE rule) {
     NFA theNfa = rule.getNFA();
     if (theNfa != null) {
-      for (State s : rule.getNFA().getAcceptedStates()) {
+      for (NFAState s : rule.getNFA().getAcceptedStates()) {
         stateToTokenRule.put(s, rule);
       }
       if (this.nfa == null) {
@@ -49,9 +49,9 @@ public class Klexer<TOKEN, TOKEN_RULE extends TokenRule> {
    * @param states
    * @return
    */
-  private TOKEN_RULE selectBestToken(State[] states) {
+  private TOKEN_RULE selectBestToken(NFAState[] states) {
     TOKEN_RULE bestTokenInfo = null;
-    for (State s : states) {
+    for (NFAState s : states) {
       TOKEN_RULE tk = this.stateToTokenRule.get(s);
       if (bestTokenInfo == null || tk.getPriority() < bestTokenInfo.getPriority()) {
         bestTokenInfo = tk;
@@ -75,13 +75,13 @@ public class Klexer<TOKEN, TOKEN_RULE extends TokenRule> {
     int startOffset = charStream.getCurrentOffset();
     int startLine = charStream.getCurrentLine();
     int startColumn = charStream.getCurrentColumn();
-    MatchResult match = nfa.match(charStream);
+    NFAMatchResult match = nfa.match(charStream);
     if (match == null) {
       throw new LexException(
               new OffsetRange(startOffset, startOffset, startLine, startColumn, startLine, startColumn),
               "unexcepted input");
     }
-    State[] matchedStates = match.getMatchedState();
+    NFAState[] matchedStates = match.getMatchedState();
     TOKEN_RULE tokenType = this.selectBestToken(matchedStates);
     int stopOffset = charStream.getCurrentOffset() - 1;
     int stopLine = charStream.getCurrentLine();

@@ -10,16 +10,16 @@ import java.util.Set;
  *
  * @author Kason Yang
  */
-public class StateUtil {
+public class NFAStateUtil {
 
-  public static Set<State> getLambdaClosureStates(Set<State> states) {
-    Queue<State> todos = new LinkedList();
+  public static Set<NFAState> getLambdaClosureStates(Set<NFAState> states) {
+    Queue<NFAState> todos = new LinkedList();
     todos.addAll(states);
-    Set<State> results = new HashSet();
+    Set<NFAState> results = new HashSet();
     while (!todos.isEmpty()) {
-      State s = todos.poll();
+      NFAState s = todos.poll();
       if (results.add(s)) {
-        State[] lambdaStates = s.getLambdaClosureStates();
+        NFAState[] lambdaStates = s.getLambdaClosureStates();
         todos.addAll(Arrays.asList(lambdaStates));
       }
     }

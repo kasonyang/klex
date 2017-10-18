@@ -3,7 +3,7 @@ package site.kason.klex.dfa;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
-import site.kason.klex.nfa.Matcher;
+import site.kason.klex.match.Matcher;
 
 /**
  *
