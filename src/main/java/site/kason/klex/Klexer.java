@@ -21,7 +21,7 @@ import site.kason.klex.nfa.NFAState;
 public class Klexer<TOKEN, TOKEN_RULE extends TokenRule> {
 
   
-  private Map<DFA, TOKEN_RULE> stateToTokenRule = new HashMap();
+  private Map<DFA, TOKEN_RULE> dfa2TokenRule = new HashMap();
   
   private CharStream charStream;
   //private int offset = 0;
@@ -39,7 +39,7 @@ public class Klexer<TOKEN, TOKEN_RULE extends TokenRule> {
   private void addTokenRule(TOKEN_RULE rule) {
     NFA theNfa = rule.getNFA();
     DFA dfa = DFAUtil.buildFromNFA(theNfa);
-    this.stateToTokenRule.put(dfa, rule);
+    this.dfa2TokenRule.put(dfa, rule);
   }
 
 
@@ -59,31 +59,31 @@ public class Klexer<TOKEN, TOKEN_RULE extends TokenRule> {
     int startLine = charStream.getCurrentLine();
     int startColumn = charStream.getCurrentColumn();
     
-    Set<DFA> dfaList = this.stateToTokenRule.keySet();
+    Set<DFA> dfaList = this.dfa2TokenRule.keySet();
     
-    List<DFASimulator> simulators = new ArrayList(dfaList.size());
+    List<DFASimulator> nextableSimulators = new ArrayList(dfaList.size());
     for(DFA dfa:dfaList){
-      simulators.add(new DFASimulator(dfa));
+      nextableSimulators.add(new DFASimulator(dfa));
     }
     
-    DFASimulator[] simulatorsBuffer = new DFASimulator[simulators.size()];
+    DFASimulator[] simulatorsBuffer = new DFASimulator[nextableSimulators.size()];
 
     int matchedLen = 0;
     TOKEN_RULE matchedRule = null;
     int matchedCharCount = 0;
-    while(!simulators.isEmpty()){
-      int simulatorSize = simulators.size();
-      simulators.toArray(simulatorsBuffer);
-      simulators.clear();
+    while(!nextableSimulators.isEmpty()){
+      int nextableSize = nextableSimulators.size();
+      nextableSimulators.toArray(simulatorsBuffer);
+      nextableSimulators.clear();
       int ch = charStream.lookAhead(++matchedCharCount);
-      for(int i=0;i<simulatorSize;i++){
+      for(int i=0;i<nextableSize;i++){
         DFASimulator sm = simulatorsBuffer[i];
         sm.next(ch);
         if(sm.nextable()){
-          simulators.add(sm);
+          nextableSimulators.add(sm);
         }
       }
-      TOKEN_RULE bestMatchedRule = this.selectBestMatchedTokenRule(simulatorsBuffer,0,simulatorSize);
+      TOKEN_RULE bestMatchedRule = this.selectBestMatchedTokenRule(simulatorsBuffer,0,nextableSize);
       if(bestMatchedRule!=null){
         matchedRule = bestMatchedRule;
         matchedLen = matchedCharCount;
@@ -132,7 +132,7 @@ public class Klexer<TOKEN, TOKEN_RULE extends TokenRule> {
       DFASimulator s = simulators[i];
       if(s.isAccepted()){
         DFA dfa = s.getDFA();
-        TOKEN_RULE rule = this.stateToTokenRule.get(dfa);
+        TOKEN_RULE rule = this.dfa2TokenRule.get(dfa);
         if(result==null || rule.getPriority() < result.getPriority()){
           result = rule;
         }
