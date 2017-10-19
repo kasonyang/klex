@@ -28,15 +28,15 @@ public class DFA {
   @Deprecated
   @Nullable
   public DFAMatchResult match(CharStream charStream,boolean consume){
-    DFAState state = this.startState;
+    DFASimulator simulator = new DFASimulator(this);
     DFAState matchedState = null;
     int matchedLen = 0;
     int pos = 1;
     int ch;
-    while(state!=null && (ch=charStream.lookAhead(pos))!=CharStream.EOF){
-      state = state.getNextState(ch);
-      if(acceptedStates.contains(state)){
-        matchedState = state;
+    while(simulator.nextable() && (ch=charStream.lookAhead(pos))!=CharStream.EOF){
+      simulator.next(ch);
+      if(simulator.isAccepted()){
+        matchedState = simulator.getCurrentState();
         matchedLen = pos;
       }
       pos++;

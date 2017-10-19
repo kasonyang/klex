@@ -31,6 +31,10 @@ public class DFASimulator {
     return acceptedStates.contains(currentState);
   }
 
+  public DFAState getCurrentState() {
+    return currentState;
+  }
+
   public boolean nextable() {
     return currentState != null;
   }
