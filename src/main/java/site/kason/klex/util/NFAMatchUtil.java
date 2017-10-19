@@ -1,7 +1,10 @@
-package site.kason.klex.nfa;
+package site.kason.klex.util;
 
 import java.util.Set;
 import site.kason.klex.CharStream;
+import site.kason.klex.nfa.NFA;
+import site.kason.klex.nfa.NFASimulator;
+import site.kason.klex.nfa.NFAState;
 
 /**
  *

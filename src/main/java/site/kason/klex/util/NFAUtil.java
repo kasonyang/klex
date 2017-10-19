@@ -1,9 +1,11 @@
-package site.kason.klex.nfa;
+package site.kason.klex.util;
 
 import site.kason.klex.match.RangeCharMatcher;
 import site.kason.klex.match.ExcludeCharMatcher;
 import site.kason.klex.match.AnyCharMatcher;
 import java.util.Arrays;
+import site.kason.klex.nfa.NFA;
+import site.kason.klex.nfa.NFAState;
 
 /**
  *

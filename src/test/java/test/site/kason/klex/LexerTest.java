@@ -11,7 +11,7 @@ import site.kason.klex.LexException;
 import site.kason.klex.StringCharStream;
 import site.kason.klex.TokenFactory;
 import site.kason.klex.nfa.NFA;
-import site.kason.klex.nfa.NFAUtil;
+import site.kason.klex.util.NFAUtil;
 import site.kason.klex.TokenRule;
 
 /**

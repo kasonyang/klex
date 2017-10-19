@@ -9,8 +9,8 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import site.kason.klex.dfa.DFA;
 import site.kason.klex.dfa.DFASimulator;
-import site.kason.klex.dfa.DFAUtil;
-import site.kason.klex.nfa.NFAMatchResult;
+import site.kason.klex.util.DFAUtil;
+import site.kason.klex.util.NFAMatchResult;
 import site.kason.klex.nfa.NFA;
 import site.kason.klex.nfa.NFAState;
 

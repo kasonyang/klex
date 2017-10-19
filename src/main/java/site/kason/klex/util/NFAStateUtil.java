@@ -1,10 +1,11 @@
-package site.kason.klex.nfa;
+package site.kason.klex.util;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import site.kason.klex.nfa.NFAState;
 
 /**
  *

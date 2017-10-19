@@ -1,7 +1,10 @@
-package site.kason.klex.dfa;
+package site.kason.klex.util;
 
 import javax.annotation.Nullable;
 import site.kason.klex.CharStream;
+import site.kason.klex.dfa.DFA;
+import site.kason.klex.dfa.DFASimulator;
+import site.kason.klex.dfa.DFAState;
 
 /**
  *

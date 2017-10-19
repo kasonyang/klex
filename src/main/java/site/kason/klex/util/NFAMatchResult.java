@@ -1,5 +1,6 @@
-package site.kason.klex.nfa;
+package site.kason.klex.util;
 
+import site.kason.klex.nfa.NFAState;
 import site.kason.klex.nfa.NFAState;
 
 /**

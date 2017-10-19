@@ -1,4 +1,6 @@
-package site.kason.klex.dfa;
+package site.kason.klex.util;
+
+import site.kason.klex.dfa.DFAState;
 
 /**
  *

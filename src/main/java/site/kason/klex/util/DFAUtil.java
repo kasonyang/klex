@@ -1,13 +1,14 @@
-package site.kason.klex.dfa;
+package site.kason.klex.util;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import site.kason.klex.dfa.DFA;
+import site.kason.klex.dfa.DFAState;
 import site.kason.klex.match.Matcher;
 import site.kason.klex.nfa.NFA;
 import site.kason.klex.nfa.NFAState;
-import site.kason.klex.nfa.NFAStateUtil;
 
 /**
  *

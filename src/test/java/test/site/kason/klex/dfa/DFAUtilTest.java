@@ -4,11 +4,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import site.kason.klex.StringCharStream;
 import site.kason.klex.dfa.DFA;
-import site.kason.klex.dfa.DFAMatchResult;
-import site.kason.klex.dfa.DFAMatchUtil;
-import site.kason.klex.dfa.DFAUtil;
+import site.kason.klex.util.DFAMatchResult;
+import site.kason.klex.util.DFAMatchUtil;
+import site.kason.klex.util.DFAUtil;
 import site.kason.klex.nfa.NFA;
-import site.kason.klex.nfa.NFAUtil;
+import site.kason.klex.util.NFAUtil;
 
 /**
  *

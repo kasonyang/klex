@@ -6,10 +6,10 @@ import static org.junit.Assert.*;
 import site.kason.klex.CharStream;
 import site.kason.klex.StringCharStream;
 import site.kason.klex.nfa.NFA;
-import site.kason.klex.nfa.NFAUtil;
+import site.kason.klex.util.NFAUtil;
 import site.kason.klex.nfa.NFAState;
-import site.kason.klex.nfa.NFAMatchResult;
-import site.kason.klex.nfa.NFAMatchUtil;
+import site.kason.klex.util.NFAMatchResult;
+import site.kason.klex.util.NFAMatchUtil;
 
 /**
  *
