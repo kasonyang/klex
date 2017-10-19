@@ -20,4 +20,33 @@ public class RangeCharMatcher implements Matcher {
     return character >= firstAcceptedChar && character <= lastAcceptedChar;
   }
 
+  @Override
+  public int hashCode() {
+    int hash = 5;
+    hash = 37 * hash + this.firstAcceptedChar;
+    hash = 37 * hash + this.lastAcceptedChar;
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final RangeCharMatcher other = (RangeCharMatcher) obj;
+    if (this.firstAcceptedChar != other.firstAcceptedChar) {
+      return false;
+    }
+    if (this.lastAcceptedChar != other.lastAcceptedChar) {
+      return false;
+    }
+    return true;
+  }
+
 }
