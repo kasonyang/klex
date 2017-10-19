@@ -10,9 +10,7 @@ import javax.annotation.Nullable;
 import site.kason.klex.dfa.DFA;
 import site.kason.klex.dfa.DFASimulator;
 import site.kason.klex.util.DFAUtil;
-import site.kason.klex.util.NFAMatchResult;
 import site.kason.klex.nfa.NFA;
-import site.kason.klex.nfa.NFAState;
 
 /**
  *
@@ -37,9 +35,11 @@ public class Klexer<TOKEN, TOKEN_RULE extends TokenRule> {
   }
 
   private void addTokenRule(TOKEN_RULE rule) {
-    NFA theNfa = rule.getNFA();
-    DFA dfa = DFAUtil.buildFromNFA(theNfa);
-    this.dfa2TokenRule.put(dfa, rule);
+    NFA nfa = rule.getNFA();
+    if(nfa!=null){
+      DFA dfa = DFAUtil.buildFromNFA(nfa);
+      this.dfa2TokenRule.put(dfa, rule);
+    }
   }
 
 
