@@ -1,10 +1,7 @@
 package site.kason.klex.nfa;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import site.kason.klex.CharStream;
@@ -25,44 +22,27 @@ public class NFA {
   }
 
   public NFAMatchResult match(CharStream inputStream) {
-    Set<NFAState> currentStates = new HashSet();
-    currentStates.add(startState);
-    currentStates = NFAStateUtil.getLambdaClosureStates(currentStates);
-    NFAState[] matchedState = null;//this.findAcceptedState(currentStates);
+    NFASimulator simulator = new NFASimulator(this);
+    Set<NFAState> matchedStates = null;//this.findAcceptedState(currentStates);
     int inputOffset = 1;
     int matchedLen = 0;
-    while (!currentStates.isEmpty() && inputStream.lookAhead(inputOffset) != CharStream.EOF) {
-      Set<NFAState> nextStates = new HashSet();
+    while (simulator.nextable() && inputStream.lookAhead(inputOffset) != CharStream.EOF) {      
       int input = inputStream.lookAhead(inputOffset++);
-      for (NFAState s : currentStates) {
-        NFAState[] nexts = s.getNextStates(input);
-        nextStates.addAll(Arrays.asList(nexts));
-      }
-      nextStates = NFAStateUtil.getLambdaClosureStates(nextStates);
-      NFAState[] found = this.findAcceptedState(nextStates);
-      if (found != null && found.length > 0) {
-        matchedState = found;
+      simulator.next(input);
+      Set<NFAState> found = simulator.getAcceptedStates();
+      if (!found.isEmpty()) {
+        matchedStates = found;
         matchedLen = inputOffset - 1;
       }
-      currentStates = nextStates;
     }
     int[] matchedChars = inputStream.consume(matchedLen);
-    return matchedState != null ? new NFAMatchResult(matchedState, matchedLen, matchedChars) : null;
-  }
-
-  private NFAState[] findAcceptedState(Set<NFAState> states) {
-    List<NFAState> accepteds = new LinkedList();
-    for (NFAState s : states) {
-      if (this.acceptedStates.contains(s)) {
-        accepteds.add(s);
-      }
-    }
-    return accepteds.toArray(new NFAState[accepteds.size()]);
+    return matchedStates != null 
+            ? new NFAMatchResult(matchedStates.toArray(new NFAState[matchedStates.size()]), matchedLen, matchedChars) 
+            : null;
   }
 
   public NFAState[] getAcceptedStates() {
-    NFAState[] res = (NFAState[]) Array.newInstance(NFAState.class, acceptedStates.size());
-    return acceptedStates.toArray(res);
+    return acceptedStates.toArray(new NFAState[acceptedStates.size()]);
   }
 
   public NFAState getStartState() {
