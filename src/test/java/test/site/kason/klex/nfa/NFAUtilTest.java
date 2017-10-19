@@ -1,6 +1,5 @@
 package test.site.kason.klex.nfa;
 
-import java.util.Arrays;
 import java.util.Random;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -10,6 +9,7 @@ import site.kason.klex.nfa.NFA;
 import site.kason.klex.nfa.NFAUtil;
 import site.kason.klex.nfa.NFAState;
 import site.kason.klex.nfa.NFAMatchResult;
+import site.kason.klex.nfa.NFAMatchUtil;
 
 /**
  *
@@ -26,7 +26,7 @@ public class NFAUtilTest {
     NFA nfa = NFAUtil.oneOfString("hello");
     NFAState[] acceptedStates = nfa.getAcceptedStates();
     assertEquals(acceptedStates.length, 1);
-    NFAMatchResult matchedState = nfa.match(is);
+    NFAMatchResult matchedState = NFAMatchUtil.match(nfa,is);
     assertNotNull(matchedState);
     //assertTrue(Arrays.asList(acceptedStates).contains(matchedState.getMatchedState()));
   }
@@ -34,11 +34,11 @@ public class NFAUtilTest {
   @Test
   public void testRangeMatch() {
     NFA nfa = NFAUtil.range('a', 'z');
-    assertNotNull(nfa.match(new StringCharStream("a")));
-    assertNotNull(nfa.match(new StringCharStream("g")));
-    assertNotNull(nfa.match(new StringCharStream("m")));
-    assertNotNull(nfa.match(new StringCharStream("z")));
-    assertNull(nfa.match(new StringCharStream("A")));
+    assertMatch(nfa, "a");
+    assertMatch(nfa, "g");
+    assertMatch(nfa, "m");
+    assertMatch(nfa, "z");
+    assertNotMatch(nfa, "A");
   }
 
   @Test
@@ -50,27 +50,27 @@ public class NFAUtilTest {
     NFA nfa = NFAUtil.oneOfString("hello");
     NFA nfa2 = NFAUtil.oneOfString("hi");
     nfa.or(nfa2);
-    NFAMatchResult matched1 = nfa.match(is1);
-    NFAMatchResult matched2 = nfa.match(is2);
-    NFAMatchResult matched3 = nfa.match(is3);
+    NFAMatchResult matched1 = NFAMatchUtil.match(nfa,is1);
+    NFAMatchResult matched2 = NFAMatchUtil.match(nfa,is2);
+    NFAMatchResult matched3 = NFAMatchUtil.match(nfa,is3);
     assertNotNull(matched1);
     assertNotNull(matched2);
     assertNull(matched3);
     nfa.concat(nfa2);
-    assertNotNull(nfa.match(isConcat));
+    assertNotNull(NFAMatchUtil.match(nfa,isConcat));
 
     nfa.closure();
-    assertEquals(null, nfa.match(new StringCharStream("")));
-    assertEquals(7, nfa.match(new StringCharStream("hellohi")).getMatchedLength());
-    assertEquals(14, nfa.match(new StringCharStream("hellohihellohi")).getMatchedLength());
-    assertEquals(21, nfa.match(new StringCharStream("hellohihellohihellohi")).getMatchedLength());
+    assertEquals(null, NFAMatchUtil.match(nfa,new StringCharStream("")));
+    assertEquals(7, NFAMatchUtil.match(nfa,new StringCharStream("hellohi")).getMatchedLength());
+    assertEquals(14, NFAMatchUtil.match(nfa,new StringCharStream("hellohihellohi")).getMatchedLength());
+    assertEquals(21, NFAMatchUtil.match(nfa,new StringCharStream("hellohihellohihellohi")).getMatchedLength());
   }
   
   @Test
   public void testExclude(){
     NFA nfa = NFAUtil.exclude(',');
-    assertNotNull(nfa.match(new StringCharStream("a")));
-    assertNull(nfa.match(new StringCharStream(",")));
+    assertMatch(nfa, "a");
+    assertNotMatch(nfa, ",");
   }
   
   @Test
@@ -78,26 +78,38 @@ public class NFAUtilTest {
     Random random = new Random();
     NFA nfa = NFAUtil.anyChar();
     for(int i=0;i<50;i++){
-      assertNotNull(nfa.match(new StringCharStream(new int[]{random.nextInt()})));
+      int value = random.nextInt();
+      NFAMatchResult result = NFAMatchUtil.match(nfa, new StringCharStream(new int[]{value}));
+      assertNotNull(result);
     }
   }
   
   @Test
   public void testOneOfInt(){
     NFA nfa = NFAUtil.oneOf('a','b');
-    assertNotNull(nfa.match(new StringCharStream("a")));
-    assertNotNull(nfa.match(new StringCharStream("b")));
-    assertNull(nfa.match(new StringCharStream("c")));
-    assertNull(nfa.match(new StringCharStream("d")));
+    assertMatch(nfa, "a");
+    assertMatch(nfa, "b");
+    assertNotMatch(nfa, "c");
+    assertNotMatch(nfa, "d");
   }
   
     @Test
   public void testOneOfString(){
     NFA nfa = NFAUtil.oneOfString("if","for");
-    assertNotNull(nfa.match(new StringCharStream("if")));
-    assertNotNull(nfa.match(new StringCharStream("for")));
-    assertNull(nfa.match(new StringCharStream("while")));
-    assertNull(nfa.match(new StringCharStream("else")));
+    assertMatch(nfa, "if");
+    assertMatch(nfa, "for");
+    assertNotMatch(nfa, "while");
+    assertNotMatch(nfa, "else");
+  }
+  
+  private void assertMatch(NFA nfa,String content){
+    NFAMatchResult result = NFAMatchUtil.match(nfa, new StringCharStream(content));
+    assertNotNull(result);
+  }
+  
+  private void assertNotMatch(NFA nfa,String content){
+    NFAMatchResult result = NFAMatchUtil.match(nfa, new StringCharStream(content));
+    assertNull(result);
   }
 
 }

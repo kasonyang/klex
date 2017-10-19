@@ -21,26 +21,6 @@ public class NFA {
     this.acceptedStates = acceptedStates;
   }
 
-  public NFAMatchResult match(CharStream inputStream) {
-    NFASimulator simulator = new NFASimulator(this);
-    Set<NFAState> matchedStates = null;//this.findAcceptedState(currentStates);
-    int inputOffset = 1;
-    int matchedLen = 0;
-    while (simulator.nextable() && inputStream.lookAhead(inputOffset) != CharStream.EOF) {      
-      int input = inputStream.lookAhead(inputOffset++);
-      simulator.next(input);
-      Set<NFAState> found = simulator.getAcceptedStates();
-      if (!found.isEmpty()) {
-        matchedStates = found;
-        matchedLen = inputOffset - 1;
-      }
-    }
-    int[] matchedChars = inputStream.consume(matchedLen);
-    return matchedStates != null 
-            ? new NFAMatchResult(matchedStates.toArray(new NFAState[matchedStates.size()]), matchedLen, matchedChars) 
-            : null;
-  }
-
   public NFAState[] getAcceptedStates() {
     return acceptedStates.toArray(new NFAState[acceptedStates.size()]);
   }

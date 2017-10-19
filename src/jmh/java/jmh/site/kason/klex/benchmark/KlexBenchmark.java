@@ -1,6 +1,5 @@
 package jmh.site.kason.klex.benchmark;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -15,9 +14,11 @@ import org.openjdk.jmh.annotations.Warmup;
 import site.kason.klex.StringCharStream;
 import site.kason.klex.dfa.DFA;
 import site.kason.klex.dfa.DFAMatchResult;
+import site.kason.klex.dfa.DFAMatchUtil;
 import site.kason.klex.dfa.DFAUtil;
 import site.kason.klex.nfa.NFAMatchResult;
 import site.kason.klex.nfa.NFA;
+import site.kason.klex.nfa.NFAMatchUtil;
 import site.kason.klex.nfa.NFAUtil;
 
 /**
@@ -47,19 +48,19 @@ public class KlexBenchmark {
     int contentLen = content.length();
     DFAMatchResult dfaResult = this.benchmarkDFA();
     NFAMatchResult nfaResult = this.benchmarkNFA();
-    if(dfaResult.getMatchedLength()!=contentLen || nfaResult.getMatchedLength()!=contentLen){
+    if (dfaResult.getMatchedLength() != contentLen || nfaResult.getMatchedLength() != contentLen) {
       throw new RuntimeException("unexpected result");
     }
   }
 
   @Benchmark
   public DFAMatchResult benchmarkDFA() {
-    return dfa.match(new StringCharStream(content));
+    return DFAMatchUtil.match(dfa, new StringCharStream(content));
   }
 
   @Benchmark
   public NFAMatchResult benchmarkNFA() {
-    return nfa.match(new StringCharStream(content));
+    return NFAMatchUtil.match(nfa, new StringCharStream(content));
   }
 
 }

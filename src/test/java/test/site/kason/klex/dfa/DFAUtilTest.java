@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import site.kason.klex.StringCharStream;
 import site.kason.klex.dfa.DFA;
 import site.kason.klex.dfa.DFAMatchResult;
+import site.kason.klex.dfa.DFAMatchUtil;
 import site.kason.klex.dfa.DFAUtil;
 import site.kason.klex.nfa.NFA;
 import site.kason.klex.nfa.NFAUtil;
@@ -51,13 +52,13 @@ public class DFAUtilTest {
   }
 
   private void assertMatch(DFA dfa, String content) {
-    DFAMatchResult result = dfa.match(new StringCharStream(content));
+    DFAMatchResult result = DFAMatchUtil.match(dfa,new StringCharStream(content));
     assertNotNull(result);
     assertEquals(content.length(), result.getMatchedLength());
   }
 
   private void assertNotMatch(DFA dfa, String content) {
-    DFAMatchResult result = dfa.match(new StringCharStream(content));
+    DFAMatchResult result = DFAMatchUtil.match(dfa,new StringCharStream(content));
     assertNull(result);
   }
 
