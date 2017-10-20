@@ -4,6 +4,12 @@ import site.kason.klex.match.RangeCharMatcher;
 import site.kason.klex.match.ExcludeCharMatcher;
 import site.kason.klex.match.AnyCharMatcher;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import site.kason.klex.match.Matcher;
 import site.kason.klex.nfa.NFA;
 import site.kason.klex.nfa.NFAState;
 
@@ -64,6 +70,36 @@ public class NFAUtil {
     NFAState acceptedState = new NFAState();
     startState.pushNextState(new AnyCharMatcher(), acceptedState);
     return new NFA(startState, Arrays.asList(acceptedState));
+  }
+  
+  public static NFA copy(NFA nfa){
+    Map<NFAState,NFAState> old2new = new HashMap();
+    NFAState startState = getOrCopyState(nfa.getStartState(),old2new);
+    List<NFAState> acceptedStates = new LinkedList();
+    for(NFAState s:nfa.getAcceptedStates()){
+      NFAState newACState = old2new.get(s);
+      if(newACState!=null){
+        acceptedStates.add(newACState);
+      }
+    }
+    return new NFA(startState, acceptedStates);
+  }
+  
+  private static NFAState getOrCopyState(NFAState oldState,Map<NFAState,NFAState> old2new){
+    NFAState newState = old2new.get(oldState);
+    if(newState==null){
+      newState = new NFAState();
+      old2new.put(oldState, newState);
+      for(NFAState ls:oldState.getLambdaClosureStates()){
+        newState.pushLambdaClosureState(getOrCopyState(ls,old2new));
+      }
+      for(Map.Entry<Matcher, Set<NFAState>> e:oldState.getNextStates().entrySet()){
+        for(NFAState s:e.getValue()){
+          newState.pushNextState(e.getKey(), getOrCopyState(s,old2new));
+        }
+      }
+    }
+    return newState;
   }
 
 }

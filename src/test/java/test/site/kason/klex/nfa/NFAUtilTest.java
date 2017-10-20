@@ -93,9 +93,18 @@ public class NFAUtilTest {
     assertNotMatch(nfa, "d");
   }
   
-    @Test
+  @Test
   public void testOneOfString(){
     NFA nfa = NFAUtil.oneOfString("if","for");
+    assertMatch(nfa, "if");
+    assertMatch(nfa, "for");
+    assertNotMatch(nfa, "while");
+    assertNotMatch(nfa, "else");
+  }
+  
+  @Test
+  public void testCopy(){
+    NFA nfa = NFAUtil.copy(NFAUtil.oneOfString("if","for"));
     assertMatch(nfa, "if");
     assertMatch(nfa, "for");
     assertNotMatch(nfa, "while");
