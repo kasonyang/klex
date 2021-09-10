@@ -1,15 +1,9 @@
 package site.kason.klex.util;
 
-import site.kason.klex.match.RangeCharMatcher;
-import site.kason.klex.match.ExcludeCharMatcher;
-import site.kason.klex.match.AnyCharMatcher;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import site.kason.klex.match.Matcher;
+import site.kason.klex.match.*;
+
+import java.util.*;
+
 import site.kason.klex.nfa.NFA;
 import site.kason.klex.nfa.NFAState;
 
@@ -19,11 +13,12 @@ import site.kason.klex.nfa.NFAState;
  */
 public class NFAUtil {
 
-  public static NFA range(int firstAcceptedChar, int lastAcceptedChar) {
-    NFAState startState = new NFAState();
-    NFAState acceptedState = new NFAState();
-    startState.pushNextState(new RangeCharMatcher(firstAcceptedChar, lastAcceptedChar), acceptedState);
-    return new NFA(startState, Arrays.asList(acceptedState));
+  public static NFA range(int... chars) {
+    return rangeNFA(false, chars);
+  }
+
+  public static NFA excludeRange(int... chars) {
+    return rangeNFA(true, chars);
   }
 
   public static NFA oneOfString(String... str) {
@@ -65,6 +60,10 @@ public class NFAUtil {
     return new NFA(startState, Arrays.asList(acceptedState));
   }
 
+  public static NFA ofPattern(String pattern) {
+    return new NFAPattern(pattern).getNFA();
+  }
+
   public static NFA anyChar() {
     NFAState startState = new NFAState();
     NFAState acceptedState = new NFAState();
@@ -100,6 +99,22 @@ public class NFAUtil {
       }
     }
     return newState;
+  }
+
+  private static NFA rangeNFA(boolean excludeMode, int... chars) {
+    if (chars.length % 2 != 0) {
+      throw new IllegalArgumentException("invalid arguments count:" + chars.length);
+    }
+    NFAState startState = new NFAState();
+    NFAState acceptedState = new NFAState();
+    Matcher[] matchers = new Matcher[chars.length / 2];
+    for (int i = 0; i < chars.length; i += 2) {
+      matchers[i/2] = new RangeCharMatcher(chars[i], chars[i + 1]);
+    }
+    Matcher orMatcher = matchers.length == 1 ? matchers[0] : new OrMatcher(matchers);
+    Matcher finalMatcher = excludeMode ? new NotMatcher(orMatcher) : orMatcher;
+    startState.pushNextState(finalMatcher, acceptedState);
+    return new NFA(startState, Collections.singletonList(acceptedState));
   }
 
 }

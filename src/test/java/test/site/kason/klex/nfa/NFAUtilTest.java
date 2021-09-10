@@ -110,15 +110,73 @@ public class NFAUtilTest {
     assertNotMatch(nfa, "while");
     assertNotMatch(nfa, "else");
   }
-  
+
+  @Test
+  public void testPattern() {
+    NFA nfa = NFAUtil.ofPattern("(test)+");
+    assertMatch(nfa, "test");
+    assertMatch(nfa, "testtest");
+    assertMatch(nfa, "testtesttest");
+    assertNotMatch(nfa, "");
+    assertNotMatch(nfa, "testt");
+  }
+
+  @Test
+  public void testPattern2() {
+    NFA nfa = NFAUtil.ofPattern("1(test)*");
+    assertMatch(nfa, "1");
+    assertMatch(nfa, "1test");
+    assertMatch(nfa, "1testtest");
+    assertMatch(nfa, "1testtesttest");
+    assertNotMatch(nfa, "t");
+  }
+
+  @Test
+  public void testPattern3() {
+    NFA nfa = NFAUtil.ofPattern("[abc]");
+    assertMatch(nfa, "a");
+    assertMatch(nfa, "b");
+    assertMatch(nfa, "c");
+    assertNotMatch(nfa,"d");
+    assertNotMatch(nfa,"e");
+  }
+
+  @Test
+  public void testPattern4() {
+    NFA nfa = NFAUtil.ofPattern("[^ab]");
+    assertNotMatch(nfa, "a");
+    assertNotMatch(nfa, "b");
+    assertMatch(nfa, "c");
+    assertMatch(nfa,"d");
+  }
+
+  @Test
+  public void testPattern5() {
+    NFA nfa = NFAUtil.ofPattern("[a-z]+");
+    assertMatch(nfa, "a");
+    assertMatch(nfa, "ab");
+    assertNotMatch(nfa, "A");
+    assertNotMatch(nfa, "AB");
+  }
+
+  @Test
+  public void testPattern6() {
+    NFA nfa = NFAUtil.ofPattern("a\\d?");
+    assertMatch(nfa,"a");
+    assertMatch(nfa,"a1");
+    assertNotMatch(nfa, "ab");
+  }
+
   private void assertMatch(NFA nfa,String content){
     NFAMatchResult result = NFAMatchUtil.match(nfa, new StringCharStream(content));
     assertNotNull(result);
+    assertEquals(content.length(), result.getMatchedLength());
   }
   
   private void assertNotMatch(NFA nfa,String content){
     NFAMatchResult result = NFAMatchUtil.match(nfa, new StringCharStream(content));
-    assertNull(result);
+    assertTrue(result == null || result.getMatchedLength() != content.length());
   }
+
 
 }

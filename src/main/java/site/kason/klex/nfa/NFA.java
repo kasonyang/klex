@@ -63,4 +63,12 @@ public class NFA {
     return this;
   }
 
+  public NFA optional() {
+    NFAState[] acList = this.getAcceptedStates();
+    for (NFAState s : acList) {
+      startState.pushLambdaClosureState(s);
+    }
+    return this;
+  }
+
 }
