@@ -1,0 +1,6 @@
+{
+  "name":"test",
+  "version":123,
+  "test":true,
+  "private":false
+}

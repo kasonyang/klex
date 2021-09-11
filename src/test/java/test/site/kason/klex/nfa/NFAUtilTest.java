@@ -112,6 +112,12 @@ public class NFAUtilTest {
   }
 
   @Test
+  public void testStringPattern() {
+    NFA nfa = NFAUtil.ofPattern("\"([^\"]|\\\\\")+\"");
+    assertMatch(nfa, "\"name\"");
+  }
+
+  @Test
   public void testPattern() {
     NFA nfa = NFAUtil.ofPattern("(test)+");
     assertMatch(nfa, "test");
