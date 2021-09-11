@@ -92,7 +92,7 @@ public class Klexer<TOKEN, TOKEN_RULE extends TokenRule> {
     if (matchedRule == null) {
       throw new LexException(
               new OffsetRange(startOffset, startOffset, startLine, startColumn, startLine, startColumn),
-              "unexcepted input");
+              String.format("unexpected input at (%d,%d)",startLine, startColumn));
     }
     int[] matchedChars = charStream.consume(matchedLen);
     int stopOffset = charStream.getCurrentOffset() - 1;
