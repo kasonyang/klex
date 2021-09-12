@@ -87,9 +87,9 @@ public class StringCharStream implements CharStream {
   }
 
   /**
-   * the current caret of stream,zero-based.
+   * get the current caret of stream
    *
-   * @return
+   * @return the caret,zero-based.
    */
   @Override
   public int getCurrentOffset() {

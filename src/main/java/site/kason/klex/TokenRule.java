@@ -9,11 +9,11 @@ import site.kason.klex.nfa.NFA;
 public interface TokenRule {
 
   /**
-   * smaller value has higher priority
-   * @return 
+   * Get the priority of token.Smaller value has higher priority.
+   * @return the priority of token
    */
-  public int getPriority();
+  int getPriority();
 
-  public NFA getNFA();
+  NFA getNFA();
 
 }

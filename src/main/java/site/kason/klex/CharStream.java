@@ -16,7 +16,7 @@ public interface CharStream {
 
   /**
    *
-   * @param count
+   * @param count char count to look ahead
    * @return return -1 if out the ending of input
    */
   public int lookAhead(int count);
